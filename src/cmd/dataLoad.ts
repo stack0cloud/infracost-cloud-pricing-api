@@ -1,4 +1,4 @@
-import glob from 'glob';
+import { globSync } from 'glob';
 import fs from 'fs';
 import zlib from 'zlib';
 import { promisify } from 'util';
@@ -68,7 +68,7 @@ async function replaceProductTable(client: PoolClient) {
 }
 
 async function loadFiles(path: string, client: PoolClient): Promise<void> {
-  const filenames = glob.sync(`${path}/*.csv.gz`);
+  const filenames = globSync(`${path}/*.csv.gz`);
   if (filenames.length === 0) {
     config.logger.error(
       `Could not load prices: There are no data files at '${path}/*.csv.gz'`

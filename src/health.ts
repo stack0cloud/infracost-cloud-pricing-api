@@ -1,7 +1,7 @@
-import express from 'express';
+import express, { Router } from 'express';
 import config from './config';
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.get('/health', async (_req, res) => {
   const status = {

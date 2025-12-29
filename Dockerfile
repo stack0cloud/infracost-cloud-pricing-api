@@ -1,14 +1,21 @@
-FROM node:16.13-alpine3.12 as build
+FROM node:20-alpine AS build
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm install --production \
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --prod --frozen-lockfile \
   && cp -R node_modules prod_node_modules \
-  && npm install
+  && pnpm install --frozen-lockfile
 COPY . .
-RUN npm run build
+RUN pnpm run build
 
-FROM node:16.13-alpine3.12 as release
+FROM node:20-alpine AS release
+
+# Install pnpm and remove npm (reduces image size and eliminates npm vulnerabilities)
+RUN corepack enable && corepack prepare pnpm@latest --activate \
+  && npm uninstall -g npm
 
 RUN apk add --no-cache bash curl postgresql-client
 
@@ -25,4 +32,4 @@ COPY --from=build /usr/src/app/dist ./dist
 COPY package*.json ./
 ENV NODE_ENV=production
 EXPOSE 4000
-CMD [ "npm", "run", "start" ]
+CMD [ "node", "dist/server.js" ]

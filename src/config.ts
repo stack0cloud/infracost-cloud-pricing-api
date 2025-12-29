@@ -83,7 +83,7 @@ async function pg(): Promise<Pool> {
       }
 
     } else {
-      logger.warn(`Error POSTGRES_CREDENTIALS are missing`)
+      logger.info(`Using individual PostgreSQL connection parameters (POSTGRES_HOST, POSTGRES_USER, etc.)`)
       user = process.env.POSTGRES_USER || 'postgres'; 
       password = process.env.POSTGRES_PASSWORD || '';
       host = process.env.POSTGRES_HOST || 'localhost';

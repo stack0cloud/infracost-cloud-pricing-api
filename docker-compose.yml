@@ -39,10 +39,10 @@ services:
     depends_on: [postgres]
     networks:
       - cloud_pricing_api
-    command: ["npm", "run", "job:init"]
+    command: ["pnpm", "run", "job:init"]
 
   # Cron: Add a cron job to run every week to update the database data. The cron entry should look something like:
-  # 0 4 * * SUN docker-compose run --rm update_job npm run job:update >> /var/log/cron.log 2>&1
+  # 0 4 * * SUN docker-compose run --rm update_job pnpm run job:update >> /var/log/cron.log 2>&1
   update_job:
     build:
       context: .
@@ -57,10 +57,10 @@ services:
     depends_on: [postgres]
     networks:
       - cloud_pricing_api
-    command: ["npm", "run", "job:update"]
+    command: ["pnpm", "run", "job:update"]
 
   postgres:
-    image: postgres:13
+    image: postgres:16
     user: postgres
     environment:
       - POSTGRES_DB=cloud_pricing
